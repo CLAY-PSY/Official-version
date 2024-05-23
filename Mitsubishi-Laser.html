@@ -117,6 +117,27 @@ input[type="submit"]:hover, button:hover {
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const fields = [
+    document.getElementById("positiveProgramNickname"),
+    document.getElementById("positiveParameterNickname"),
+    document.getElementById("negativeProgramNickname"),
+    document.getElementById("negativeParameterNickname"),
+    document.getElementById("workOrderId"),
+    document.getElementById("programFilePath"),
+    document.getElementById("parameterFilePath")
+  ];
+
+  fields.forEach((field, index) => {
+    field.addEventListener("keydown", function(event) {
+      if (event.key === "Enter" && index < fields.length - 1) {
+        event.preventDefault(); // 防止表单提交
+        fields[index + 1].focus();
+      }
+    });
+  });
+});
+
 document.getElementById("sdlConfigForm").addEventListener("submit", function(event) {
   event.preventDefault();
   generateConfigFile();
