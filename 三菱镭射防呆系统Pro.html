@@ -5,37 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>三菱镭射防呆系统Pro</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #1a1a1a;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow: hidden;
+    color: #fff;
 }
 
 .container {
-    background-color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.8);
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     max-width: 800px;
     width: 100%;
+    animation: fadeIn 1.5s ease-in-out;
 }
 
 h1 {
-    color: #333;
+    color: #00d4ff;
     margin-bottom: 30px;
     text-align: center;
-    font-size: 32px;
+    font-size: 36px;
+    animation: slideInFromTop 1.5s ease-out;
 }
 
 label {
     display: block;
     margin-bottom: 10px;
-    color: #555;
+    color: #ccc;
     font-weight: bold;
     font-size: 18px;
 }
@@ -44,22 +50,30 @@ input[type="text"], input[type="number"], input[type="submit"], button {
     width: 100%;
     padding: 15px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #00d4ff;
     border-radius: 4px;
     font-size: 18px;
     box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 input[type="submit"], button {
-    background-color: #007bff;
-    color: white;
+    background-color: #00d4ff;
+    color: #1a1a1a;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 input[type="submit"]:hover, button:hover {
-    background-color: #0056b3;
+    background-color: #00b3cc;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #00b3cc;
 }
 
 .buttons-container {
@@ -75,6 +89,16 @@ input[type="submit"]:hover, button:hover {
     text-align: center;
     color: #888;
     font-size: 16px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInFromTop {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 </style>
 </head>
