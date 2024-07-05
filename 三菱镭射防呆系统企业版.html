@@ -153,8 +153,8 @@ function generateConfigFile() {
     return;
   }
 
-  const programFilePath = "C:\\程序默认路径";
-  const parameterFilePath = "D:\\条件默认路径";
+  const programFilePath = "C:\\PRG";
+  const parameterFilePath = "C:\\CND";
 
   let configFileContent = `${positiveProgramNickname},${positiveParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},0,,\n`;
   configFileContent += `${negativeProgramNickname},${negativeParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},1,,\n`;
@@ -187,8 +187,8 @@ function generatePositiveConfig() {
     return;
   }
 
-  const programFilePath = "C:\\程序默认路径";
-  const parameterFilePath = "D:\\条件默认路径";
+  const programFilePath = "C:\\PRG";
+  const parameterFilePath = "C:\\CND";
 
   let configFileContent = `${positiveProgramNickname},${positiveParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},0,,\n`;
 
@@ -203,7 +203,7 @@ function generatePositiveConfig() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href  = url;
-  a.download = `${positiveProgramNickname}_${workOrderId}.sdl`;
+  a.download = `${workOrderId}.sdl`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -220,8 +220,8 @@ function generateNegativeConfig() {
     return;
   }
 
-  const programFilePath = "C:\\程序默认路径";
-  const parameterFilePath = "D:\\条件默认路径";
+  const programFilePath = "C:\\PRG";
+  const parameterFilePath = "C:\\CND";
 
   let configFileContent = `${negativeProgramNickname},${negativeParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},1,,\n`;
 
@@ -236,7 +236,7 @@ function generateNegativeConfig() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${negativeProgramNickname}_${workOrderId}.sdl`;
+  a.download = `${workOrderId}.sdl`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
