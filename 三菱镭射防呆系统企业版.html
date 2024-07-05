@@ -183,7 +183,7 @@ function generatePositiveConfig() {
   const workOrderId = document.getElementById("workOrderId").value;
 
   if (!positiveProgramNickname || !positiveParameterNickname || !workOrderPlanSheets || !workOrderId) {
-    alert("请按需求填写正面加工程序和加工条件！");
+    alert("请按需求填写正面加工程序，正面加工条件，加工计划张数，工单管理号码！");
     return;
   }
 
@@ -216,7 +216,7 @@ function generateNegativeConfig() {
   const workOrderId = document.getElementById("workOrderId").value;
 
   if (!negativeProgramNickname || !negativeParameterNickname || !workOrderPlanSheets || !workOrderId) {
-    alert("请按需求填写反面加工程序和加工条件！");
+    alert("请按需求填写反面加工程序，反面加工条件，加工计划张数，工单管理号码！");
     return;
   }
 
