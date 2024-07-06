@@ -139,11 +139,11 @@ document.getElementById("sdlConfigForm").addEventListener("submit", function(eve
 function generateConfigFile() {
   const positiveProgramNickname = document.getElementById("positiveProgramNickname").value;
   const negativeProgramNickname = document.getElementById("negativeProgramNickname").value;
-  const workOrderId = document.getElementById("workOrderId").value;
   const workOrderParameter = document.getElementById("workOrderParameter").value;
   const workOrderPlanSheets = document.getElementById("workOrderPlanSheets").value;
+  const workOrderId = document.getElementById("workOrderId").value;
 
-  if (!positiveProgramNickname || !negativeProgramNickname || !workOrderId || !workOrderParameter || !workOrderPlanSheets) {
+  if (!positiveProgramNickname || !negativeProgramNickname || !workOrderParameter || !workOrderPlanSheets|| !workOrderId) {
     alert("请填写所有字段！");
     return;
   }
