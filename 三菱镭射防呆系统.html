@@ -14,6 +14,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow: hidden;
 }
 
 .container {
@@ -23,6 +24,9 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     width: 100%;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1.5s ease, transform 1.5s ease; /* 添加淡入和滑入效果 */
 }
 
 h1 {
@@ -76,9 +80,82 @@ input[type="submit"]:hover, button:hover {
     color: #888;
     font-size: 16px;
 }
+
+/* 启动画样式 */
+#startup-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    font-size: 24px;
+    z-index: 9999;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 加载条容器 */
+#loading-bar-container {
+    width: 80%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* 加载条 */
+#loading-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #f1c40f, #2ecc71);
+    background-size: 500% 500%;
+    animation: loadingGradient 4s ease infinite;
+}
+
+@keyframes loadingGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
 </style>
 </head>
 <body>
+
+<!-- 启动画屏幕 -->
+<div id="startup-screen">
+    <div class="loader"></div>
+    <div id="loading-bar-container">
+        <div id="loading-bar"></div>
+    </div>
+    <h1>系统启动中...</h1>
+</div>
 
 <div class="container">
   <h1>三菱镭射防呆系统</h1>
@@ -115,131 +192,154 @@ input[type="submit"]:hover, button:hover {
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const fields = [
-    document.getElementById("positiveProgramNickname"),
-    document.getElementById("positiveParameterNickname"),
-    document.getElementById("negativeProgramNickname"),
-    document.getElementById("negativeParameterNickname"),
-    document.getElementById("workOrderPlanSheets"),
-    document.getElementById("workOrderId")
-  ];
+// 模拟加载条的加载过程
+function loadProgressBar() {
+    let loadingBar = document.getElementById("loading-bar");
+    let width = 0;
+    let interval = setInterval(function() {
+        if (width >= 100) {
+            clearInterval(interval);
+            // 当加载完成后，淡出启动画面并显示内容
+            setTimeout(function() {
+                document.getElementById("startup-screen").style.display = "none";
+                document.querySelector(".container").style.opacity = 1;
+                document.querySelector(".container").style.transform = 'translateY(0)';
+            }, 500); // 等待500ms后隐藏加载屏幕并显示主内容
+        } else {
+            width++;
+            loadingBar.style.width = width + "%";
+        }
+    }, 40); // 进度条每40ms增加1%
+}
 
-  fields.forEach((field, index) => {
-    field.addEventListener("keydown", function(event) {
-      if (event.key === "Enter" && index < fields.length - 1) {
-        event.preventDefault(); // 防止表单提交
-        fields[index + 1].focus();
-      }
+// 在页面加载完成时，启动加载条
+document.addEventListener("DOMContentLoaded", function() {
+    loadProgressBar();
+
+    const fields = [
+        document.getElementById("positiveProgramNickname"),
+        document.getElementById("positiveParameterNickname"),
+        document.getElementById("negativeProgramNickname"),
+        document.getElementById("negativeParameterNickname"),
+        document.getElementById("workOrderPlanSheets"),
+        document.getElementById("workOrderId")
+    ];
+
+    fields.forEach((field, index) => {
+        field.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && index < fields.length - 1) {
+                event.preventDefault(); // 防止表单提交
+                fields[index + 1].focus();
+            }
+        });
     });
-  });
 });
 
 document.getElementById("sdlConfigForm").addEventListener("submit", function(event) {
-  event.preventDefault();
-  generateConfigFile();
+    event.preventDefault();
+    generateConfigFile();
 });
 
 function generateConfigFile() {
-  const positiveProgramNickname = document.getElementById("positiveProgramNickname").value;
-  const positiveParameterNickname = document.getElementById("positiveParameterNickname").value;
-  const negativeProgramNickname = document.getElementById("negativeProgramNickname").value;
-  const negativeParameterNickname = document.getElementById("negativeParameterNickname").value;
-  const workOrderPlanSheets = document.getElementById("workOrderPlanSheets").value;
-  const workOrderId = document.getElementById("workOrderId").value;
+    const positiveProgramNickname = document.getElementById("positiveProgramNickname").value;
+    const positiveParameterNickname = document.getElementById("positiveParameterNickname").value;
+    const negativeProgramNickname = document.getElementById("negativeProgramNickname").value;
+    const negativeParameterNickname = document.getElementById("negativeParameterNickname").value;
+    const workOrderPlanSheets = document.getElementById("workOrderPlanSheets").value;
+    const workOrderId = document.getElementById("workOrderId").value;
 
-  if (!positiveProgramNickname || !positiveParameterNickname || !negativeProgramNickname || !negativeParameterNickname || !workOrderPlanSheets || !workOrderId) {
-    alert("请填写所有字段！");
-    return;
-  }
+    if (!positiveProgramNickname || !positiveParameterNickname || !negativeProgramNickname || !negativeParameterNickname || !workOrderPlanSheets || !workOrderId) {
+        alert("请填写所有字段！");
+        return;
+    }
 
-  const programFilePath = "C:\\PRG";
-  const parameterFilePath = "C:\\CND";
+    const programFilePath = "C:\\PRG";
+    const parameterFilePath = "C:\\CND";
 
-  let configFileContent = `${positiveProgramNickname},${positiveParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},0,,\n`;
-  configFileContent += `${negativeProgramNickname},${negativeParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},1,,\n`;
+    let configFileContent = `${positiveProgramNickname},${positiveParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},0,,\n`;
+    configFileContent += `${negativeProgramNickname},${negativeParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},1,,\n`;
 
-  for (let i = 0; i < 28; i++) {
-    configFileContent += ",,,1,0,0,0:00:00,,0,,\n";
-  }
+    for (let i = 0; i < 28; i++) {
+        configFileContent += ",,,1,0,0,0:00:00,,0,,\n";
+    }
 
-  configFileContent += `${programFilePath}\n`;
-  configFileContent += `${parameterFilePath}`;
+    configFileContent += `${programFilePath}\n`;
+    configFileContent += `${parameterFilePath}`;
 
-  const blob = new Blob([configFileContent], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${workOrderId}.sdl`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+    const blob = new Blob([configFileContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${workOrderId}.sdl`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 function generatePositiveConfig() {
-  const positiveProgramNickname = document.getElementById("positiveProgramNickname").value;
-  const positiveParameterNickname = document.getElementById("positiveParameterNickname").value;
-  const workOrderPlanSheets = document.getElementById("workOrderPlanSheets").value;
-  const workOrderId = document.getElementById("workOrderId").value;
+    const positiveProgramNickname = document.getElementById("positiveProgramNickname").value;
+    const positiveParameterNickname = document.getElementById("positiveParameterNickname").value;
+    const workOrderPlanSheets = document.getElementById("workOrderPlanSheets").value;
+    const workOrderId = document.getElementById("workOrderId").value;
 
-  if (!positiveProgramNickname || !positiveParameterNickname || !workOrderPlanSheets || !workOrderId) {
-    alert("请按需求填写正面加工程序，正面加工条件，加工计划张数，工单管理号码！");
-    return;
-  }
+    if (!positiveProgramNickname || !positiveParameterNickname || !workOrderPlanSheets || !workOrderId) {
+        alert("请按需求填写正面加工程序，正面加工条件，加工计划张数，工单管理号码！");
+        return;
+    }
 
-  const programFilePath = "C:\\PRG";
-  const parameterFilePath = "C:\\CND";
+    const programFilePath = "C:\\PRG";
+    const parameterFilePath = "C:\\CND";
 
-  let configFileContent = `${positiveProgramNickname},${positiveParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},0,,\n`;
+    let configFileContent = `${positiveProgramNickname},${positiveParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},0,,\n`;
 
-  for (let i = 0; i < 29; i++) {
-    configFileContent += ",,,1,0,0,0:00:00,,0,,\n";
-  }
+    for (let i = 0; i < 29; i++) {
+        configFileContent += ",,,1,0,0,0:00:00,,0,,\n";
+    }
 
-  configFileContent += `${programFilePath}\n`;
-  configFileContent += `${parameterFilePath}`;
+    configFileContent += `${programFilePath}\n`;
+    configFileContent += `${parameterFilePath}`;
 
-  const blob = new Blob([configFileContent], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href  = url;
-  a.download = `${workOrderId}.sdl`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+    const blob = new Blob([configFileContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href  = url;
+    a.download = `${workOrderId}.sdl`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 function generateNegativeConfig() {
-  const negativeProgramNickname = document.getElementById("negativeProgramNickname").value;
-  const negativeParameterNickname = document.getElementById("negativeParameterNickname").value;
-  const workOrderPlanSheets = document.getElementById("workOrderPlanSheets").value;
-  const workOrderId = document.getElementById("workOrderId").value;
+    const negativeProgramNickname = document.getElementById("negativeProgramNickname").value;
+    const negativeParameterNickname = document.getElementById("negativeParameterNickname").value;
+    const workOrderPlanSheets = document.getElementById("workOrderPlanSheets").value;
+    const workOrderId = document.getElementById("workOrderId").value;
 
-  if (!negativeProgramNickname || !negativeParameterNickname || !workOrderPlanSheets || !workOrderId) {
-    alert("请按需求填写反面加工程序，反面加工条件，加工计划张数，工单管理号码！");
-    return;
-  }
+    if (!negativeProgramNickname || !negativeParameterNickname || !workOrderPlanSheets || !workOrderId) {
+        alert("请按需求填写反面加工程序，反面加工条件，加工计划张数，工单管理号码！");
+        return;
+    }
 
-  const programFilePath = "C:\\PRG";
-  const parameterFilePath = "C:\\CND";
+    const programFilePath = "C:\\PRG";
+    const parameterFilePath = "C:\\CND";
 
-  let configFileContent = `${negativeProgramNickname},${negativeParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},1,,\n`;
+    let configFileContent = `${negativeProgramNickname},${negativeParameterNickname},1,${workOrderPlanSheets},0,0,0:00:00,${workOrderId},1,,\n`;
 
-  for (let i = 0; i < 29; i++) {
-    configFileContent += ",,,1,0,0,0:00:00,,0,,\n"; 
+    for (let i = 0; i < 29; i++) {
+        configFileContent += ",,,1,0,0,0:00:00,,0,,\n"; 
  }
 
-  configFileContent += `${programFilePath}\n`;
-  configFileContent += `${parameterFilePath}`;
+    configFileContent += `${programFilePath}\n`;
+    configFileContent += `${parameterFilePath}`;
 
-  const blob = new Blob([configFileContent], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${workOrderId}.sdl`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+    const blob = new Blob([configFileContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${workOrderId}.sdl`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 </script>
 </body>
