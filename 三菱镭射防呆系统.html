@@ -26,7 +26,7 @@ body {
     width: 100%;
     opacity: 0;
     transform: translateY(50px);
-    transition: opacity 1.5s ease, transform 1.5s ease; /* 添加淡入和滑入效果 */
+    transition: opacity 1.5s ease, transform 1.5s ease;
 }
 
 h1 {
@@ -72,7 +72,7 @@ input[type="submit"]:hover, button:hover {
 }
 
 .buttons-container button {
-    width: 48%;
+    width: 30%;
 }
 
 .footer {
@@ -181,6 +181,7 @@ input[type="submit"]:hover, button:hover {
   <div class="buttons-container">
     <button type="button" onclick="generatePositiveConfig()">生成正面配方</button>
     <button type="button" onclick="generateNegativeConfig()">生成反面配方</button>
+    <button type="button" onclick="clearInputs()">清空所有输入</button> <!-- 清空按钮 -->
   </div>
   <div class="footer">
     开发者信息: 潘少岩 | 联系方式: PSY19970824@163.com
@@ -207,6 +208,11 @@ function loadProgressBar() {
             loadingBar.style.width = width + "%";
         }
     }, 40); // 进度条每40ms增加1%
+}
+
+// 清空所有输入的函数
+function clearInputs() {
+    document.getElementById("sdlConfigForm").reset();
 }
 
 // 在页面加载完成时，启动加载条
